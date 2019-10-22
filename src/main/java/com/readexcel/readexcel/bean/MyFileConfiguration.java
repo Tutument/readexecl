@@ -16,5 +16,6 @@ public class MyFileConfiguration {
         /// 设置总上传数据总大小
         factory.setMaxRequestSize("102400KB");
         return factory.createMultipartConfig();
+        //测试
     }
 }
