@@ -1,44 +1,31 @@
-package com.readexcel.readexcel.test;
+package com.readexcel.readexcel;
 
-import com.readexcel.readexcel.pojo.Dog;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.constraints.Size;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+/**
+ * 生成一些基础类
+ */
+
 public class Produce {
     public static final String name = "";
 
     @Autowired
-    TaskExecutor taskExecutor;
+    static TaskExecutor taskExecutor;
 
-    public final HashMap<String,String> map= new HashMap();
+    public static final HashMap<String,String> map= new HashMap();
 
-    @Test
-    public void doOther(){
-        ArrayList<Dog> list = new ArrayList<>();
-        Map<String, Dog> map = list.stream().collect(Collectors.toMap(s -> s.getId(), s -> s));
-        map.forEach((key,val)->{
-            System.out.println(key+":"+val);
-        });
-    }
-
-    @Test
-    public void doSome() {
+    public static void main(String[] args) {
         String strKey = "String,Integer,Long";
         String strVal = "id,status,money";
         setMap(strKey,strVal,map);
@@ -47,7 +34,7 @@ public class Produce {
 
         taskExecutor.execute(()->{
             String pojo = getPojo(map);
-            getFile(pojo,"1");
+            getFile(pojo);
             System.out.println(pojo);
             try {
                 latch.countDown();
@@ -57,7 +44,7 @@ public class Produce {
         });
         taskExecutor.execute(()->{
             String service = getService();
-            getFile(service,"2");
+            getFile(service);
             System.out.println(service);
             try {
                 latch.countDown();
@@ -70,18 +57,18 @@ public class Produce {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Done==============");
+
 
     }
 
-    public void setMap(String strKey,String strVal,HashMap<String ,String > map){
+    public static void setMap(String strKey,String strVal,HashMap<String ,String > map){
         String[] splitName = strKey.split(",");
         String[] splitIndex = strVal.split(",");
         for(int i=0; i<splitName.length;i++){
             map.put(splitName[i],splitIndex[i]);
         }
     }
-    public String getPojo(HashMap<String,String> map){
+    public static String getPojo(HashMap<String,String> map){
         StringBuffer buffer = new StringBuffer();
         StringBuffer bufferGS = new StringBuffer();
         map.forEach((key,val)->{
@@ -97,20 +84,20 @@ public class Produce {
         return buffer.toString()+bufferGS.toString();
     }
 
-    public String getService(){
+    public static String getService(){
         StringBuffer buffer = new StringBuffer();
         buffer.append("asdasdasdasdasdasd");
         return buffer.toString();
     }
 
-    public void getFile(String str,String falg){
+    public static void getFile(String str){
         String path =  "D:\\\\jar" ;
         String content = str;
         //写入文件
         BufferedWriter bw = null;
         try {
             File file = null;
-            file = new File(path+"\\\\"+"Esb"+falg+".java");
+            file = new File(path+"\\\\"+"Esb.java");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -128,4 +115,5 @@ public class Produce {
             }
         }
     }
+
 }
